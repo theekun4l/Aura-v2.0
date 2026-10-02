@@ -1,8 +1,8 @@
-import webbrowser,time,random,pyjokes,os  #,pywhatkit
+import webbrowser, pyjokes,os  #,pywhatkit
 from features.utils import Text_Animator
-from features.replies import Replies_class
+from Backend.Features.replies import Replies_class
 from datetime import datetime
-from LLM.llm import ask_llm
+from Backend.Services.llm import ask_llm
 class Aura(Text_Animator,Replies_class):
 
     def open_insta(self):
