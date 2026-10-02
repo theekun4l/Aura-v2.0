@@ -1,6 +1,4 @@
-streamlit
+fastapi
+uvicorn
 openai
 python-dotenv
-pyjokes
-
-requests

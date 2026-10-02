@@ -6,15 +6,6 @@ load_dotenv()
 
 API_KEY = os.getenv("WEATHER_API_KEY")
 
-#
-
-
-# response = requests.get(base_url)
-# data =  response.json()
-# print(data)
-# data = response.json()
-# joke = data["value"]
-# print(joke)
 
 
 class GetData:
@@ -31,14 +22,12 @@ class GetData:
         data = self.get_response(base_url)
         return data['text']
 
-    def git_hub_info(self):
-            username = input("Enter GitHub username: ")
+    def git_hub_info(self,username):
             url ="https://api.github.com/users/" + username
             data = self.get_response(url)
-            if data['message']:
+            if data.get('message'):
                 return False
-            else:
-                return data['login'],data['name'],data['bio'],data['location'],data['public_repos'],data['followers'],data['following'],data['html_url']
+            return data['login'],data['name'],data['bio'],data['location'],data['public_repos'],data['followers'],data['following'],data['html_url']
 
     def crypto_price(self):
         crypto_currency  = input("Enter coin name: ").lower()
@@ -48,8 +37,8 @@ class GetData:
             return False
         return data[crypto_currency]['inr']
 
-    def weather(self):
-        city_name = input("Enter city name: ").strip().lower()
+    def weather(self,place):
+        city_name = place.strip().lower()
         base_url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_KEY}&units=metric"
         data = self.get_response(base_url)
         if data['cod'] != 200:

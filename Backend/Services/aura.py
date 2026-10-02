@@ -1,114 +1,107 @@
-import webbrowser, pyjokes,os  #,pywhatkit
-from features.utils import Text_Animator
-from Backend.Features.replies import Replies_class
 from datetime import datetime
-from Backend.Services.llm import ask_llm
-class Aura(Text_Animator,Replies_class):
-
-    def open_insta(self):
-        webbrowser.open("https://instagram.com")
-        return None,None
+from .llm import ask_llm
+from .api import GetData
 
 
-    def open_youtube(self):
-        webbrowser.open("https://youtube.com")
-        return None,None
-
-    def open_chrome(self):
-        os.system("start chrome")
-        return None,None
-
-
-    # def play_music(self,music):
-    #         pywhatkit.playonyt(music)
+class Aura(GetData):
 
     def date_time(self):
-            date12 = datetime.now().strftime("%d-%m-%y")
-            time_now = datetime.now().strftime("%I:%M %p")
-            return f"Aura: Today is {date12}. " , f"Aura: Current time is {time_now} "
-    def joke(self):
-        return pyjokes.get_joke('en', 'all'),None
+        date_today = datetime.now().strftime("%d-%m-%y")
+        time_now = datetime.now().strftime("%I:%M %p")
 
-    def exit(self):
-        self.respond(self.farwell_replies())
+        return {
+            "type": "response",
+            "message": f"Today is {date_today}. Current time is {time_now}."
+        }
 
     def command(self, user_input):
-        commands = {'youtube':self.open_youtube,'date':self.date_time,'time':self.date_time,'date and time':self.date_time,'instagram':self.open_insta,'joke':self.joke,'laugh':self.joke}
-        for key in commands:
-            flag = False #if its not in command list
-            if key in user_input:
-                flag = True
-                break
 
-        if flag:
-            a,b = commands[key]()
-            return a,b,True
+        user_input = user_input.lower().strip()
+
+        if "youtube" in user_input:
+            return {
+                "type": "open_url",
+                "url": "https://youtube.com"
+            }
+
+        elif "instagram" in user_input:
+            return {
+                "type": "open_url",
+                "url": "https://instagram.com"
+            }
+
+        elif "date" in user_input or "time" in user_input:
+            return self.date_time()
+
+        elif 'weather' in user_input:
+            response = ask_llm(f"""
+Extract the city name from this user request.
+
+User request: {user_input}
+
+Return ONLY the city name.
+"""
+)
+
+            weather = self.weather(response)
+
+            if not weather:
+                return {
+                    "type": "error",
+                    "message": "Weather information nahi mil paayi."
+                }
+
+            temp, condition, city = weather
+
+            return {
+                "type": "response",
+                "message": f"The temperature in {city} is {temp:.0f}°C with {condition}."
+            }
+        elif 'github' in user_input:
+            response = ask_llm(
+    f"""
+Extract the GitHub username from this user request.
+
+User request: {user_input}
+
+Return ONLY the GitHub username.
+Do not explain anything.
+Do not add extra text.
+
+Examples:
+"Give me GitHub info of torvalds" → torvalds
+"Show me the GitHub profile of theekun4l" → theekun4l
+"Tell me about github user octocat" → octocat
+"""
+)
+
+            
+            print("GITHUB USERNAME:", response)
+
+            github = self.git_hub_info(response.strip())
+
+            print("GITHUB RESPONSE:", github)
+
+            if not github:
+                return {
+            "type": "error",
+            "message": "GitHub user nahi mila."
+        }
+
+            login, name, bio, location, repos, followers, following, url = github
+
+            return {
+        "type": "response",
+        "message": (
+            f"GitHub user {login} has {repos} public repositories, "
+            f"{followers} followers and {following} following."
+        ),
+        "profile": url
+    }
         else:
-            msg = ask_llm(user_input)
-            return msg,False,False
+            response = ask_llm(user_input)
 
-
-
-        # if 'youtube' in user_input or 'yt' in user_input:
-
-        #     return True
-        # elif 'date' in user_input and 'time' in user_input:
-
-        #     return True
-        # elif 'time' in user_input:
-
-        #     return True
-        # elif 'date' in user_input:
-
-        #     return True
-        # elif 'chrome' in user_input:
-
-        #     return True
-        # elif 'play' in user_input and 'music' in user_input:
-
-        #     return True
-        # elif 'music' in user_input:
-        #     self.type_animator("Play [Song Name]: ", False)
-        #     song = input()
-        #     song = song.capitalize()
-        #     self.respond(self.thinking_replies())
-        #     time.sleep(1.2)
-        #     self.respond(f"Aura: Playing {song}...")
-        #     song = song.lower()
-        #     self.play_music(song)
-        #     self.respond(self.success_replies())
-        #     return True
-        # elif 'play' == user_input:
-        #     self.type_animator("What do you want to play: ", False)
-        #     song = input()
-        #     song = song.capitalize()
-        #     self.respond(self.thinking_replies())
-        #     time.sleep(1.2)
-        #     self.respond(f"Aura: Playing {song}...")
-        #     song = song.lower()
-        #     self.play_music(song)
-        #     self.respond(self.success_replies())
-        #     return True
-        # elif 'play' in user_input:
-        #     song = user_input.replace('play', '').strip()
-        #     song = song.capitalize()
-        #     self.respond(self.thinking_replies())
-        #     time.sleep(1.2)
-        #     self.respond(f"Aura: Playing {song}...")
-        #     user_input = user_input.lower()
-        #     self.play_music(song)
-        #     self.respond(self.success_replies())
-        #     return True
-        # elif 'instagram' in user_input:
-
-        # elif 'hello' in user_input or 'hi' in user_input:
-        #     self.respond(random.choice([
-        #         "Aura: Hello there.",
-        #         "Aura: Hi, I'm online.",
-        #         "Aura: Hey, What can i do?"
-        #     ]))
-        # elif 'joke' in user_input or 'laugh' in user_input:
-
-        # elif 'exit' in user_input:
-
-        #     return False
+            return {
+                "type": "response",
+                "message": response
+            }
