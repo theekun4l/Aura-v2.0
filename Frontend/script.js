@@ -56,7 +56,7 @@ const askAura = async (prompt) => {
 
     } catch (error) {
         console.error(error);
-        return "Sorry, Aura se response nahi aa raha.";
+        return {type:'error',message:"Sorry, Aura se response nahi aa raha."};
     }
 };
 
@@ -126,6 +126,16 @@ form.addEventListener("submit", async (event) => {
     }
 
 });
+//aura voice
+const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    utterance.lang = "en-IN";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+
+    speechSynthesis.speak(utterance);
+};
 
 //mic feature
 
@@ -143,13 +153,46 @@ mic.addEventListener("click", () => {
     recognition.start();
 });
 
+const notify = document.createElement('div');
+notify.classList.add('notify');
+notify.innerText = 'Aura is listening say something';
+
 recognition.onstart = () => {
     console.log("recording started");
+    body.appendChild(notify)
 };
 
-recognition.onresult = (e) => {
+recognition.onresult = async (e) => {
+    
+    const result = e.results[0][0];
     const transcript = e.results[0][0].transcript;
-    console.log("You said:", transcript);
+    
+    if (e.results[0].isFinal) {
+        const res = await askAura(transcript);
+
+    
+        // loader.remove();
+        
+        if (res) {
+            
+            if (res.type === 'open_url'){
+                const url = res.url;
+                const msg = res.message;
+                speak(msg);
+                window.open(url,"_blank");
+            }
+
+            else if(res.type === 'response'){
+                const msg = res.message;
+                speak(msg);
+            }
+
+            else if (res.type === 'error'){
+                const msg = res.message;
+                speak(`${res.type}:${msg}`)
+            }
+    }}
+    
 };
 
 recognition.onerror = (e) => {
@@ -157,5 +200,6 @@ recognition.onerror = (e) => {
 };
 
 recognition.onend = () => {
+    notify.remove()
     console.log("recording ended");
 };

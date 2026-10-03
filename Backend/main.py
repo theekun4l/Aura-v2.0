@@ -22,3 +22,6 @@ def Ask(request : AskRequest ):
     result = aura.command(request.prompt)
 
     return result
+
+
+# uvicorn Backend.main:app --reload
