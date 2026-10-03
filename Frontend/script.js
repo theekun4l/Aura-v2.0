@@ -34,7 +34,7 @@ theme.addEventListener('click',() => {
 //asking  aura
 const askAura = async (prompt) => {
     try {
-        const response = await fetch("http://127.0.0.1:8000/ask_aura", {
+        const response = await fetch("https://aura-v2-backend.onrender.com/ask_aura", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

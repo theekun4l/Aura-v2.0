@@ -12,7 +12,9 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+    "https://aura-v2-frontend.onrender.com"
+],
     allow_methods=["*"],
     allow_headers=["*"],
 )
