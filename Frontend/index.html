@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Aura</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="light">
+
+    <button id="theme-toggle" >🌙</button>
+
+    <header>
+        <img src="assets/Logo.png" alt="logo">
+    </header>
+    <div class="heading">
+        <div>Ask our AI anything</div>
+    </div>
+    <div class="chat-history">
+        <div class="message  user">sedfg</div>
+        <div class="message ai">grfhir</div>
+    </div>
+    <form class="chat-input">
+        <div class="text-input">
+            <input type="text" placeholder="Ask me anything about your projects" id="text-input">
+            <button type="submit" id="submit-btn">➤</button>
+        </div>
+    </form>
+
     <script src="script.js"></script>
 </body>
 </html>

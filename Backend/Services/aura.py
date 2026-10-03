@@ -98,6 +98,53 @@ Examples:
         ),
         "profile": url
     }
+
+        elif 'fact' in user_input:
+            response = self.facts()
+
+            return {
+                            "type": "response",
+                            "message": response
+                        }
+        elif 'joke' in user_input:
+            response = self.get_joke()
+
+            return {
+                            "type": "response",
+                            "message": response
+                        }
+       
+        elif 'location' in user_input:
+            response = self.get_location()
+            return {
+                            "type": "response",
+                            "message": response
+            }
+        
+        elif 'price' in user_input:
+            currency = crypto_list = [
+    "bitcoin",
+    "ethereum",
+    "solana",
+    "dogecoin",
+    "cardano",
+    "ripple",
+    "binancecoin",
+    "polkadot",
+    "avalanche-2",
+    "shiba-inu",
+    "litecoin",
+    "tron",
+    "chainlink",
+    "matic-network",
+    "uniswap"
+]   
+            for c in currency:
+                if c in user_input:
+                    return {
+                "type": "response",
+                "message": f"Price of {c} is ₹{self.crypto_price(c)}"
+            }
         else:
             response = ask_llm(user_input)
 

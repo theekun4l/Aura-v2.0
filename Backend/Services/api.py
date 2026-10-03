@@ -5,6 +5,8 @@ import os
 load_dotenv()
 
 API_KEY = os.getenv("WEATHER_API_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+EXCHANGE_RATE_API_KEY = os.getenv("EXCHANGE_RATE_API_KEY")
 
 
 
@@ -29,8 +31,8 @@ class GetData:
                 return False
             return data['login'],data['name'],data['bio'],data['location'],data['public_repos'],data['followers'],data['following'],data['html_url']
 
-    def crypto_price(self):
-        crypto_currency  = input("Enter coin name: ").lower()
+    def crypto_price(self,currency):
+        crypto_currency  = currency.lower()
         base_url = "https://api.coingecko.com/api/v3/simple/price?ids=" + crypto_currency + "&vs_currencies=inr"
         data = self.get_response(base_url)
         if crypto_currency not in data:
@@ -50,14 +52,27 @@ class GetData:
         data = self.get_response(base_url)
         return f"City: {data['city']},country: {data['country']},ISP: {data['isp']}"
 
-    def get_meaning(self):
-        word = input("Enter Word : ").strip().lower()
-        base_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
+    def get_news(self):
+        base_url = f"https://newsapi.org/v2/top-headlines?country=us&category=technology&apiKey={NEWS_API_KEY}"
         data = self.get_response(base_url)
-        if isinstance(data, dict):
-            return "Nahi mila..."
-        definition = data[0]['meanings'][0]['definitions'][0]['definition']
-        return f"{word}: {definition}"
+        articles = data["articles"]
+        news = []
+
+        for article in articles[:5]:
+            news.append({
+            "title": article["title"],
+            "description": article["description"],
+            "url": article["url"]
+        })
+
+        return news
+
+    def currency_convertor(self,amount,ftype,ttype):
+        base_url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_RATE_API_KEY}/latest/{ftype}"
+        data = self.get_response(base_url)
+
+        return f"{amount}{ftype} in INR = {amount*data["conversion_rates"][ttype]}"
+
 
 
 
