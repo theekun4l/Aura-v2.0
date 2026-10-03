@@ -139,7 +139,7 @@ body.dark .heading{
     cursor: pointer;
 }
 .text-input{
-     transition: all 1s ease;
+     transition: all 0.5s ease;
      display: flex;
      justify-content: center;
      align-items: center;
@@ -148,7 +148,7 @@ body.dark .heading{
     font-weight: 500;
 }
 .text-input:hover{
-    transform: scale(1.1) translateY(-5px);
+    transform:  translateY(-8px);
     
 }
 
@@ -322,4 +322,38 @@ body.dark .ai {
         margin-left: 0;
     }
     
+}
+.mic {
+    width: 42px;
+    height: 42px;
+
+    margin-left: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px solid var(--border);
+    border-radius: 50%;
+
+    background: var(--input-bg);
+    color: var(--text);
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+    flex-shrink: 0;
+}
+
+.mic i {
+    font-size: 1rem;
+}
+
+.mic:hover {
+    transform: scale(1.08);
+}
+
+.mic:active {
+    transform: scale(0.95);
 }

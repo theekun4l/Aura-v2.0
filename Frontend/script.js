@@ -5,7 +5,8 @@ const submit_btn = document.querySelector('#submit-btn');
 const form = document.querySelector(".chat-input");
 const input = document.querySelector("#text-input");
 const header = document.querySelector('header');
-const heading = document.querySelector('.heading')
+const heading = document.querySelector('.heading');
+const mic = document.querySelector(".mic");
 
 // change theme
 theme.addEventListener('click',() => {
@@ -51,7 +52,7 @@ const askAura = async (prompt) => {
         
         console.log("API DATA:", data);
         console.log("RESPONSE:", data.response);
-        return data.message;
+        return data;
 
     } catch (error) {
         console.error(error);
@@ -104,10 +105,57 @@ form.addEventListener("submit", async (event) => {
     
     const res = await askAura(text);
 
+    
     loader.remove();
-
+    
     if (res) {
-        addMessage(res, "ai");
+        if (res.type === 'open_url'){
+            const url = res.url;
+            const msg = res.message;
+            addMessage(msg, "ai");
+            window.open(url,"_blank");
+        }
+        else if(res.type === 'response'){
+            const msg = res.message;
+            addMessage(msg,'ai');
+        }
+        else if (res.type === 'error'){
+            const msg = res.message;
+            addMessage(`${res.type}:${msg}`);
+        }
     }
 
 });
+
+//mic feature
+
+const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+const recognition = new SpeechRecognition();
+
+recognition.lang = "en-US";
+recognition.continuous = false;
+recognition.interimResults = true;
+
+mic.addEventListener("click", () => {
+    console.log("mic is clicked");
+    recognition.start();
+});
+
+recognition.onstart = () => {
+    console.log("recording started");
+};
+
+recognition.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    console.log("You said:", transcript);
+};
+
+recognition.onerror = (e) => {
+    console.log("Speech error:", e.error);
+};
+
+recognition.onend = () => {
+    console.log("recording ended");
+};

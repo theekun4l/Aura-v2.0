@@ -1,6 +1,7 @@
 from datetime import datetime
 from .llm import ask_llm
 from .api import GetData
+# from Features.replies import Replies_class
 
 
 class Aura(GetData):
@@ -21,13 +22,15 @@ class Aura(GetData):
         if "youtube" in user_input:
             return {
                 "type": "open_url",
-                "url": "https://youtube.com"
+                "url": "https://youtube.com",
+                "message": 'Opening Youtube'
             }
 
         elif "instagram" in user_input:
             return {
                 "type": "open_url",
-                "url": "https://instagram.com"
+                "url": "https://instagram.com",
+                "message": 'Opening Instagram'
             }
 
         elif "date" in user_input or "time" in user_input:
